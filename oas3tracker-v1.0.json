@@ -1,0 +1,274 @@
+{
+    "openapi":"3.0.2",
+    "info": {
+        "title":"Tracker",
+        "version":"1.0",
+        "contact": {
+            "email": "aaron.targa@gmail.com",
+            "name": "Aaron Targa",
+            "url": "https://www.targaserver.com"
+        }
+    },
+    "servers": [ {
+        "url":"http://localhost:8080/api",
+        "description": "Development"
+         }
+    ],
+    "components": {
+        "schemas": {
+            "User": {
+                "title": "User",
+                "type":"object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "example": 1
+                    },
+                    "username": {
+                        "type": "string",
+                        "example": "test"
+                    },
+                    "last_updated": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Seconds since 01-01-1970 00:00:00 UTC",
+                        "example": 1577833200
+                    }
+                }
+            },
+            "Location": {
+                "title": "Location",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type":"string",
+                        "example": "test"
+                    },
+                    "loc": {
+                        "description": "stores longitude and latitude of user",
+                        "type": "object",
+                        "properties": {
+                            "longitude": {
+                                "type": "number",
+                                "example": "-107.878700"
+                            },
+                            "latitude": {
+                                "type": "number",
+                                "example": "37.270500"
+                            }
+                        }
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "example": "1999-12-31 00:00:00"
+                    },
+                    "speed": {
+                        "type": "number",
+                        "example": "20"
+                    },
+                    "altitude": {
+                        "type": "number",
+                        "example": "1280"
+                    },
+                    "pulse": {
+                        "type": "number",
+                        "example": "73"
+                    }
+
+                }
+            }
+        }
+    },
+    "tags": [
+        { "name": "Information" },
+        { "name": "User" },
+        { "name": "Location"}
+    ],
+
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [ "Information" ],
+                "summary": "Basic information about the API",
+                "description": "Returns the current version of the API",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json":{
+                                "schema": {
+                                    "type": "string",
+                                    "description": "Information string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": ["User"],
+                "summary": "Login and get token",
+                "description": "User login that creates token after successful login",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "object",
+                                        "example": "test"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWF4In0.AB7vUWHBLPQQ11A-YAhNdZlGMSru8BkQoRhmMySDTr4"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/location": {
+            "put": {
+                "tags": ["Location"],
+                "summary": "Updates location",
+                "parameters": [],
+                "requestBody": {
+                    "description": "Updated location of user",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "location": {
+                                        "$ref": "#/components/schemas/Location"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Invalid ID",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Location not found",
+                        "content": {}
+                    },
+                    "405": {
+                        "description": "Invalid input data",
+                        "content": {}
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Location"],
+                "summary": "Initialize location",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "description": "initial location of user",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "location": {
+                                        "$ref": "#/components/schemas/Location"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "405": {
+                        "description": "Invalid input",
+                        "content": {}
+                    },
+                    "201": {
+                        "description": "Successfully initialized location",
+                        "content": {}
+                    }
+
+                }
+            }
+        },
+        "/location/{userId}": {
+            "get": {
+                "tags": ["Location"],
+                "summary": "get location by id",
+                "parameters": [
+                    {
+                        "name": "locId",
+                        "in": "path",
+                        "required": true,
+                        "schema":{
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                   
+                ],
+                "responses": {
+                    "200":{
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "location": {
+                                            "$ref": "#/components/schemas/Location"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid id supplied",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {}
+                    }
+                }
+
+            }
+        }
+    }
+}
