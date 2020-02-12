@@ -5,6 +5,7 @@ import java.io.InputStream
 import org.springframework.stereotype.Repository
 import javax.annotation.PostConstruct
 import com.example.tracker.*
+import java.io.BufferedReader
 
 
 @Repository
@@ -62,4 +63,15 @@ class LocationRepository() {
     }
 
 
+}
+
+class readToken {
+    companion object {
+        fun read(filename: String) : String {
+            val bufferedReader: BufferedReader = File(filename).bufferedReader()
+
+            val inputString = bufferedReader.use { it.readText() }
+            return inputString
+        }
+    }
 }

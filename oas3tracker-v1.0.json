@@ -142,9 +142,6 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "user": {
-                                            "$ref": "#/components/schemas/User"
-                                        },
                                         "token": {
                                             "type": "string",
                                             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWF4In0.AB7vUWHBLPQQ11A-YAhNdZlGMSru8BkQoRhmMySDTr4"

@@ -12,7 +12,9 @@ import com.auth0.jwt.interfaces.DecodedJWT
 
 import java.util.Date
 
-val algorithm: Algorithm = Algorithm.HMAC256("fhsdfherthfdfhdfhsdh");
+
+val algorithm: Algorithm = Algorithm.HMAC256(readToken.read("src/main/kotlin/com/example/tracker/users.txt"));
+
 @RestController
 class GreetingController {
 
