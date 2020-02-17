@@ -223,7 +223,7 @@
                 }
             }
         },
-        "/location/{userId}": {
+        "/location/{locId}": {
             "get": {
                 "tags": ["Location"],
                 "summary": "get location by id",
